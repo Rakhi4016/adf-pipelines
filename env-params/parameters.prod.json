@@ -1,0 +1,15 @@
+{
+  "factoryName": {
+    "value": "my-adf-prod-20250616"
+  },
+  "blue_LS_dev_properties_typeProperties_url": {
+    "value": "https://blueadlsprod.dfs.core.windows.net/"
+  },
+  "containerUri": {
+    "value": ""
+  },
+  "containerSasToken": {
+    "value": ""
+  }
+}
+
