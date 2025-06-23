@@ -22,13 +22,13 @@ jobs:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
       - name: Echo resource group name
-        run: echo "RG=${{ secrets.AZURE_RESOURCE_GROUP }}"
+        run: echo "RG=${{ secrets.ADF_PROD_RG }}"
     
 
       - name: Validate ARM Template
         run: |
           az deployment group validate \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --resource-group ${{ secrets.ADF_PROD_RG }} \
             --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
             --parameters @./my-adf-dev-20250616/env-params/parameters.prod.json
 
@@ -36,6 +36,6 @@ jobs:
         run: |
           az deployment group create \
             --name adfDeployment \
-            --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} \
+            --resource-group ${{ secrets.ADF_PROD_RG }} \
             --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
             --parameters @./my-adf-dev-20250616/env-params/parameters.prod.json
