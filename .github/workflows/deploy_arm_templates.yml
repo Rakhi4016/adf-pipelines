@@ -22,5 +22,5 @@ jobs:
         with:
           subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
           resourceGroupName: ${{ secrets.ADF_PROD_RG }}
-          template: .my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json
-          parameters: .my-adf-dev-20250616/env-params/parameters.prod.json
+          template: ./adf_publishmy-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json
+          parameters: ./adf_publishmy-adf-dev-20250616/env-params/parameters.prod.json
