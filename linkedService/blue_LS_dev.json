@@ -1,0 +1,10 @@
+{
+	"name": "blue_LS_dev",
+	"properties": {
+		"annotations": [],
+		"type": "AzureBlobFS",
+		"typeProperties": {
+			"url": "https://blueadlsdev.dfs.core.windows.net/"
+		}
+	}
+}
