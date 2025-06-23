@@ -17,7 +17,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/24hrscopy_dev')]",
+			"name": "[concat(parameters('factoryName'), '/24hrscopy')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -36,7 +36,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -126,7 +126,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "source",
@@ -140,7 +140,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "destination",
@@ -164,12 +164,12 @@
 				"lastPublishTime": "2025-06-17T22:55:48Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ds_filelevel_dev')]"
+				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel')]",
+				"[concat(variables('factoryId'), '/datasets/ds_filelevel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/CountOfFilesInFolder_dev')]",
+			"name": "[concat(parameters('factoryName'), '/CountOfFilesInFolder')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -188,7 +188,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -245,11 +245,11 @@
 				"lastPublishTime": "2025-06-19T19:56:59Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel_dev')]"
+				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DeleteFile7days_dev')]",
+			"name": "[concat(parameters('factoryName'), '/DeleteFile7days')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -268,7 +268,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -321,7 +321,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "source",
@@ -377,7 +377,7 @@
 												"userProperties": [],
 												"typeProperties": {
 													"dataset": {
-														"referenceName": "ds_filelevel_dev",
+														"referenceName": "ds_filelevel",
 														"type": "DatasetReference",
 														"parameters": {
 															"p_container": "source",
@@ -416,12 +416,12 @@
 				"lastPublishTime": "2025-06-19T19:56:59Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ds_filelevel_dev')]"
+				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel')]",
+				"[concat(variables('factoryId'), '/datasets/ds_filelevel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SchemaMatch_dev')]",
+			"name": "[concat(parameters('factoryName'), '/SchemaMatch')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -440,7 +440,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -504,7 +504,7 @@
 											}
 										},
 										"dataset": {
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "source",
@@ -583,7 +583,7 @@
 												},
 												"inputs": [
 													{
-														"referenceName": "ds_filelevel_dev",
+														"referenceName": "ds_filelevel",
 														"type": "DatasetReference",
 														"parameters": {
 															"p_container": "source",
@@ -597,7 +597,7 @@
 												],
 												"outputs": [
 													{
-														"referenceName": "ds_filelevel_dev",
+														"referenceName": "ds_filelevel",
 														"type": "DatasetReference",
 														"parameters": {
 															"p_container": "destination",
@@ -796,12 +796,12 @@
 				"lastPublishTime": "2025-06-19T19:56:59Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ds_filelevel_dev')]"
+				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel')]",
+				"[concat(variables('factoryId'), '/datasets/ds_filelevel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SourceSinkMatch_dev')]",
+			"name": "[concat(parameters('factoryName'), '/SourceSinkMatch')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -820,7 +820,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -854,7 +854,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -969,7 +969,7 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "source",
@@ -983,7 +983,7 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "destination",
@@ -1007,12 +1007,12 @@
 				"lastPublishTime": "2025-06-17T22:55:48Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ds_filelevel_dev')]"
+				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel')]",
+				"[concat(variables('factoryId'), '/datasets/ds_filelevel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/incremental_load_dev')]",
+			"name": "[concat(parameters('factoryName'), '/incremental_load')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1031,7 +1031,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataset": {
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -1084,7 +1084,7 @@
 									"userProperties": [],
 									"typeProperties": {
 										"dataset": {
-											"referenceName": "ds_filelevel_dev",
+											"referenceName": "ds_filelevel",
 											"type": "DatasetReference",
 											"parameters": {
 												"p_container": "source",
@@ -1208,7 +1208,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "source",
@@ -1218,7 +1218,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "ds_param_folderlevel_dev",
+								"referenceName": "ds_param_folderlevel",
 								"type": "DatasetReference",
 								"parameters": {
 									"p_container": "destination",
@@ -1269,12 +1269,12 @@
 				"lastPublishTime": "2025-06-17T14:53:30Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel_dev')]",
-				"[concat(variables('factoryId'), '/datasets/ds_filelevel_dev')]"
+				"[concat(variables('factoryId'), '/datasets/ds_param_folderlevel')]",
+				"[concat(variables('factoryId'), '/datasets/ds_filelevel')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_filelevel_dev')]",
+			"name": "[concat(parameters('factoryName'), '/ds_filelevel')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1323,7 +1323,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/ds_param_folderlevel_dev')]",
+			"name": "[concat(parameters('factoryName'), '/ds_param_folderlevel')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
