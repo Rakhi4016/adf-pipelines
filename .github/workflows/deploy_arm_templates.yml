@@ -24,12 +24,12 @@ jobs:
       - name: Echo resource group name
         run: echo "RG=${{ secrets.ADF_PROD_RG }}"
 
-
       - name: Print full paths of ARM templates
         run: |
           find $(pwd)/my-adf-dev-20250616/linkedTemplates -type f
-  
-    
+
+      - name: Copy parameters file to temp for validation
+        run: cp ./my-adf-dev-20250616/env-params/parameters.prod.json ./temp-params.json
 
       - name: Validate ARM Template
         run: |
@@ -37,7 +37,7 @@ jobs:
           az deployment group validate \
             --resource-group "${{ secrets.ADF_PROD_RG }}" \
             --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
-            --parameters "@./my-adf-dev-20250616/env-params/parameters.prod.json"
+            --parameters "@./temp-params.json"
 
       - name: Deploy ARM Template
         run: |
@@ -47,4 +47,3 @@ jobs:
             --resource-group "${{ secrets.ADF_PROD_RG }}" \
             --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
             --parameters "@./my-adf-dev-20250616/env-params/parameters.prod.json"
-
