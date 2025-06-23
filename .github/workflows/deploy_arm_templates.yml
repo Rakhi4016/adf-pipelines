@@ -28,8 +28,12 @@ jobs:
         run: |
           find $(pwd)/my-adf-dev-20250616/linkedTemplates -type f
 
-      - name: Copy parameters file to temp for validation
-        run: cp ./my-adf-dev-20250616/env-params/parameters.prod.json ./temp-params.json
+      - name: Extract parameters for validation
+        id: parse_params
+        run: |
+          echo "Reading and encoding parameters..."
+          PARAMS=$(cat ./my-adf-dev-20250616/env-params/parameters.prod.json | jq -c '.')
+          echo "params=$PARAMS" >> "$GITHUB_OUTPUT"
 
       - name: Validate ARM Template
         run: |
@@ -37,7 +41,7 @@ jobs:
           az deployment group validate \
             --resource-group "${{ secrets.ADF_PROD_RG }}" \
             --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
-            --parameters "@./temp-params.json"
+            --parameters '${{ steps.parse_params.outputs.params }}'
 
       - name: Deploy ARM Template
         run: |
