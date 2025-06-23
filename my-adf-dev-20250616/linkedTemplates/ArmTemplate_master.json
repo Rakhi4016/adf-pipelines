@@ -7,7 +7,7 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "my-adf-dev-20250616"
 		},
-		"blue_LS_dev_properties_typeProperties_url": {
+		"Blue_Ls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://blueadlsdev.dfs.core.windows.net/"
 		},
@@ -38,8 +38,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"blue_LS_dev_properties_typeProperties_url": {
-						"value": "[parameters('blue_LS_dev_properties_typeProperties_url')]"
+					"Blue_Ls_properties_typeProperties_url": {
+						"value": "[parameters('Blue_Ls_properties_typeProperties_url')]"
 					}
 				}
 			},
