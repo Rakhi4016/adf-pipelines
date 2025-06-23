@@ -33,15 +33,18 @@ jobs:
 
       - name: Validate ARM Template
         run: |
+          echo "Validating ARM template..."
           az deployment group validate \
-            --resource-group ${{ secrets.ADF_PROD_RG }} \
-            --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
-            --parameters ./my-adf-dev-20250616/env-params/parameters.prod.json
+            --resource-group "${{ secrets.ADF_PROD_RG }}" \
+            --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
+            --parameters "@./my-adf-dev-20250616/env-params/parameters.prod.json"
 
       - name: Deploy ARM Template
         run: |
+          echo "Starting deployment..."
           az deployment group create \
             --name adfDeployment \
-            --resource-group ${{ secrets.ADF_PROD_RG }} \
-            --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
-            --parameters ./my-adf-dev-20250616/env-params/parameters.prod.json
+            --resource-group "${{ secrets.ADF_PROD_RG }}" \
+            --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
+            --parameters "@./my-adf-dev-20250616/env-params/parameters.prod.json"
+
