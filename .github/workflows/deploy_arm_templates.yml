@@ -1,0 +1,26 @@
+name: Deploy ADF to Production
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout adf_publish branch
+        uses: actions/checkout@v3
+        with:
+          ref: adf_publish
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy ADF ARM Template
+        uses: azure/arm-deploy@v1
+        with:
+          subscriptionId: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+          resourceGroupName: ${{ secrets.ADF_PROD_RG }}
+          template: ./linkedTemplates/ArmTemplate_master.json
+          parameters: ./env-params/parameters.prod.json
