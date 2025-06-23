@@ -1,5 +1,5 @@
 {
-	"name": "SourceSinkMatch_dev",
+	"name": "SourceSinkMatch",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_param_folderlevel_dev",
+						"referenceName": "ds_param_folderlevel",
 						"type": "DatasetReference",
 						"parameters": {
 							"p_container": "source",
@@ -50,7 +50,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataset": {
-						"referenceName": "ds_param_folderlevel_dev",
+						"referenceName": "ds_param_folderlevel",
 						"type": "DatasetReference",
 						"parameters": {
 							"p_container": "source",
@@ -165,7 +165,7 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "ds_filelevel_dev",
+									"referenceName": "ds_filelevel",
 									"type": "DatasetReference",
 									"parameters": {
 										"p_container": "source",
@@ -179,7 +179,7 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "ds_filelevel_dev",
+									"referenceName": "ds_filelevel",
 									"type": "DatasetReference",
 									"parameters": {
 										"p_container": "destination",

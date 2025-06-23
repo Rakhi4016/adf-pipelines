@@ -1,5 +1,5 @@
 {
-	"name": "ds_filelevel_dev",
+	"name": "ds_filelevel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "blue_LS_dev",

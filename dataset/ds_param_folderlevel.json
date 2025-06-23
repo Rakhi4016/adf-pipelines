@@ -1,5 +1,5 @@
 {
-	"name": "ds_param_folderlevel_dev",
+	"name": "ds_param_folderlevel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "blue_LS_dev",
