@@ -36,7 +36,7 @@ jobs:
           az deployment group validate \
             --resource-group ${{ secrets.ADF_PROD_RG }} \
             --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
-            --parameters @./my-adf-dev-20250616/env-params/parameters.prod.json
+            --parameters ./my-adf-dev-20250616/env-params/parameters.prod.json
 
       - name: Deploy ARM Template
         run: |
@@ -44,4 +44,4 @@ jobs:
             --name adfDeployment \
             --resource-group ${{ secrets.ADF_PROD_RG }} \
             --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
-            --parameters @./my-adf-dev-20250616/env-params/parameters.prod.json
+            --parameters ./my-adf-dev-20250616/env-params/parameters.prod.json
