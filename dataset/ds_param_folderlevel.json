@@ -2,7 +2,7 @@
 	"name": "ds_param_folderlevel",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "blue_LS_dev",
+			"referenceName": "Blue_Ls",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {

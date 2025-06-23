@@ -2,7 +2,7 @@
 	"name": "ds_filelevel",
 	"properties": {
 		"linkedServiceName": {
-			"referenceName": "blue_LS_dev",
+			"referenceName": "Blue_Ls",
 			"type": "LinkedServiceReference"
 		},
 		"parameters": {
