@@ -23,6 +23,12 @@ jobs:
 
       - name: Echo resource group name
         run: echo "RG=${{ secrets.ADF_PROD_RG }}"
+
+
+      - name: Print full paths of ARM templates
+        run: |
+          find $(pwd)/my-adf-dev-20250616/linkedTemplates -type f
+  
     
 
       - name: Validate ARM Template
