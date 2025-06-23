@@ -8,6 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     env:
       AZURE_HTTP_USER_AGENT: "GITHUBACTIONS_$(GITHUB_ACTION)"
+      ARM_DEBUG: true
 
     steps:
       - name: Checkout adf publish branch
@@ -23,38 +24,27 @@ jobs:
       - name: Echo resource group name
         run: echo "RG=${{ secrets.ADF_PROD_RG }}"
 
+
       - name: Print full paths of ARM templates
         run: |
           find $(pwd)/my-adf-dev-20250616/linkedTemplates -type f
+  
+    
 
       - name: Validate ARM Template
         run: |
           echo "Validating ARM template..."
           az deployment group validate \
-<<<<<<< HEAD
             --resource-group "${{ secrets.ADF_PROD_RG }}" \
             --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
             --parameters "@./my-adf-dev-20250616/env-params/parameters.prod.json"
-=======
-            --resource-group ${{ secrets.ADF_PROD_RG }} \
-            --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
-            --parameters ./my-adf-dev-20250616/env-params/parameters.prod.json \
-            --only-show-errors || echo "Validation failed but continuing..."
->>>>>>> e5fdfb43f80c077d56308d3c7848e89dae46c43f
 
       - name: Deploy ARM Template
         run: |
           echo "Starting deployment..."
           az deployment group create \
             --name adfDeployment \
-<<<<<<< HEAD
             --resource-group "${{ secrets.ADF_PROD_RG }}" \
             --template-file "./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json" \
             --parameters "@./my-adf-dev-20250616/env-params/parameters.prod.json"
 
-=======
-            --resource-group ${{ secrets.ADF_PROD_RG }} \
-            --template-file ./my-adf-dev-20250616/linkedTemplates/ArmTemplate_master.json \
-            --parameters ./my-adf-dev-20250616/env-params/parameters.prod.json \
-            --only-show-errors
->>>>>>> e5fdfb43f80c077d56308d3c7848e89dae46c43f
