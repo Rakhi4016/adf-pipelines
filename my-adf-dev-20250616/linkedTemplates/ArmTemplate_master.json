@@ -7,9 +7,41 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "my-adf-dev-20250616"
 		},
+		"MySqlLS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'MySqlLS'"
+		},
+		"AzureSqlLS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlLS'"
+		},
 		"Blue_Ls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://blueadlsdev.dfs.core.windows.net/"
+		},
+		"MySqlLS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "localhost"
+		},
+		"MySqlLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "loyal_services"
+		},
+		"MySqlLS_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "root"
+		},
+		"AzureSqlLS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "my-sql-dev.database.windows.net"
+		},
+		"AzureSqlLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "my-sql-dev"
+		},
+		"AzureSqlLS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "rakesh4016"
 		},
 		"containerUri": {
 			"type": "string",
@@ -38,8 +70,32 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"AzureSqlLS_password": {
+						"value": "[parameters('AzureSqlLS_password')]"
+					},
+					"MySqlLS_password": {
+						"value": "[parameters('MySqlLS_password')]"
+					},
 					"Blue_Ls_properties_typeProperties_url": {
 						"value": "[parameters('Blue_Ls_properties_typeProperties_url')]"
+					},
+					"AzureSqlLS_properties_typeProperties_server": {
+						"value": "[parameters('AzureSqlLS_properties_typeProperties_server')]"
+					},
+					"AzureSqlLS_properties_typeProperties_database": {
+						"value": "[parameters('AzureSqlLS_properties_typeProperties_database')]"
+					},
+					"AzureSqlLS_properties_typeProperties_userName": {
+						"value": "[parameters('AzureSqlLS_properties_typeProperties_userName')]"
+					},
+					"MySqlLS_properties_typeProperties_server": {
+						"value": "[parameters('MySqlLS_properties_typeProperties_server')]"
+					},
+					"MySqlLS_properties_typeProperties_database": {
+						"value": "[parameters('MySqlLS_properties_typeProperties_database')]"
+					},
+					"MySqlLS_properties_typeProperties_username": {
+						"value": "[parameters('MySqlLS_properties_typeProperties_username')]"
 					}
 				}
 			},

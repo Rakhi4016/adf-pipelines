@@ -7,9 +7,41 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "my-adf-dev-20250616"
 		},
+		"MySqlLS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'MySqlLS'"
+		},
+		"AzureSqlLS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlLS'"
+		},
 		"Blue_Ls_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://blueadlsdev.dfs.core.windows.net/"
+		},
+		"MySqlLS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "localhost"
+		},
+		"MySqlLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "loyal_services"
+		},
+		"MySqlLS_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "root"
+		},
+		"AzureSqlLS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "my-sql-dev.database.windows.net"
+		},
+		"AzureSqlLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "my-sql-dev"
+		},
+		"AzureSqlLS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "rakesh4016"
 		}
 	},
 	"variables": {
@@ -1376,6 +1408,239 @@
 				}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/my-shir-06272025')]",
+			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "SelfHosted",
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySqlLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "MySql",
+				"typeProperties": {
+					"server": "[parameters('MySqlLS_properties_typeProperties_server')]",
+					"port": 3306,
+					"database": "[parameters('MySqlLS_properties_typeProperties_database')]",
+					"username": "[parameters('MySqlLS_properties_typeProperties_username')]",
+					"sslMode": 1,
+					"useSystemTrustStore": 0,
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('MySqlLS_password')]"
+					},
+					"driverVersion": "v2"
+				},
+				"connectVia": {
+					"referenceName": "my-shir-06272025",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/my-shir-06272025')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlLS')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureSqlDatabase",
+				"typeProperties": {
+					"server": "[parameters('AzureSqlLS_properties_typeProperties_server')]",
+					"database": "[parameters('AzureSqlLS_properties_typeProperties_database')]",
+					"encrypt": "mandatory",
+					"trustServerCertificate": false,
+					"authenticationType": "SQL",
+					"userName": "[parameters('AzureSqlLS_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('AzureSqlLS_password')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/onperm_to_cloud_incremental')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@pipeline().parameters.table_list",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Copy data1",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "MySqlSource"
+										},
+										"sink": {
+											"type": "AzureSqlSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate",
+											"disableMetricsCollection": false
+										},
+										"enableStaging": false,
+										"logSettings": {
+											"enableCopyActivityLog": true,
+											"copyActivityLogSettings": {
+												"logLevel": "Warning",
+												"enableReliableLogging": false
+											},
+											"logLocationSettings": {
+												"linkedServiceName": {
+													"referenceName": "Blue_Ls",
+													"type": "LinkedServiceReference"
+												},
+												"path": "source"
+											}
+										},
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "MySqlDS",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_table_name": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "AzureSqlDS",
+											"type": "DatasetReference",
+											"parameters": {
+												"p_table_name": {
+													"value": "@item()",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {}
+				},
+				"parameters": {
+					"table_list": {
+						"type": "array",
+						"defaultValue": [
+							"orders",
+							"payments",
+							"products",
+							"order_items"
+						]
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/MySqlDS')]",
+				"[concat(variables('factoryId'), '/datasets/AzureSqlDS')]",
+				"[concat(variables('factoryId'), '/linkedServices/Blue_Ls')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MySqlDS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "MySqlLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "MySqlTable",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().p_table_name",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/MySqlLS')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/AzureSqlDS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureSqlLS",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"p_table_name": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "AzureSqlTable",
+				"schema": [],
+				"typeProperties": {
+					"table": {
+						"value": "@concat('dbo.', dataset().p_table_name)",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureSqlLS')]"
+			]
 		}
 	]
 }
