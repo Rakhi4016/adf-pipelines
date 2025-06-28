@@ -1,0 +1,23 @@
+{
+	"name": "AzureSqlDS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "AzureSqlLS",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"p_table_name": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "AzureSqlTable",
+		"schema": [],
+		"typeProperties": {
+			"table": {
+				"value": "@concat('dbo.', dataset().p_table_name)",
+				"type": "Expression"
+			}
+		}
+	}
+}
