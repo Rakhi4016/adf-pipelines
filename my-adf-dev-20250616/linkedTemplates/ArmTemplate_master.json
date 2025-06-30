@@ -7,13 +7,25 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "my-adf-dev-20250616"
 		},
+		"AzureSqlLS_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'AzureSqlLS'"
+		},
 		"MySqlLS_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'MySqlLS'"
 		},
-		"AzureSqlLS_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'AzureSqlLS'"
+		"AzureSqlLS_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "my-sql-dev.database.windows.net"
+		},
+		"AzureSqlLS_properties_typeProperties_database": {
+			"type": "string",
+			"defaultValue": "my-sql-dev"
+		},
+		"AzureSqlLS_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "rakesh4016"
 		},
 		"Blue_Ls_properties_typeProperties_url": {
 			"type": "string",
@@ -30,18 +42,6 @@
 		"MySqlLS_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "root"
-		},
-		"AzureSqlLS_properties_typeProperties_server": {
-			"type": "string",
-			"defaultValue": "my-sql-dev.database.windows.net"
-		},
-		"AzureSqlLS_properties_typeProperties_database": {
-			"type": "string",
-			"defaultValue": "my-sql-dev"
-		},
-		"AzureSqlLS_properties_typeProperties_userName": {
-			"type": "string",
-			"defaultValue": "rakesh4016"
 		},
 		"containerUri": {
 			"type": "string",
@@ -76,9 +76,6 @@
 					"MySqlLS_password": {
 						"value": "[parameters('MySqlLS_password')]"
 					},
-					"Blue_Ls_properties_typeProperties_url": {
-						"value": "[parameters('Blue_Ls_properties_typeProperties_url')]"
-					},
 					"AzureSqlLS_properties_typeProperties_server": {
 						"value": "[parameters('AzureSqlLS_properties_typeProperties_server')]"
 					},
@@ -87,6 +84,9 @@
 					},
 					"AzureSqlLS_properties_typeProperties_userName": {
 						"value": "[parameters('AzureSqlLS_properties_typeProperties_userName')]"
+					},
+					"Blue_Ls_properties_typeProperties_url": {
+						"value": "[parameters('Blue_Ls_properties_typeProperties_url')]"
 					},
 					"MySqlLS_properties_typeProperties_server": {
 						"value": "[parameters('MySqlLS_properties_typeProperties_server')]"

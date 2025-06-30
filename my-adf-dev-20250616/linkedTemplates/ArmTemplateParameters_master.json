@@ -5,11 +5,20 @@
 		"factoryName": {
 			"value": "my-adf-dev-20250616"
 		},
+		"AzureSqlLS_password": {
+			"value": ""
+		},
 		"MySqlLS_password": {
 			"value": ""
 		},
-		"AzureSqlLS_password": {
-			"value": ""
+		"AzureSqlLS_properties_typeProperties_server": {
+			"value": "my-sql-dev.database.windows.net"
+		},
+		"AzureSqlLS_properties_typeProperties_database": {
+			"value": "my-sql-dev"
+		},
+		"AzureSqlLS_properties_typeProperties_userName": {
+			"value": "rakesh4016"
 		},
 		"Blue_Ls_properties_typeProperties_url": {
 			"value": "https://blueadlsdev.dfs.core.windows.net/"
@@ -22,15 +31,6 @@
 		},
 		"MySqlLS_properties_typeProperties_username": {
 			"value": "root"
-		},
-		"AzureSqlLS_properties_typeProperties_server": {
-			"value": "my-sql-dev.database.windows.net"
-		},
-		"AzureSqlLS_properties_typeProperties_database": {
-			"value": "my-sql-dev"
-		},
-		"AzureSqlLS_properties_typeProperties_userName": {
-			"value": "rakesh4016"
 		},
 		"containerUri": {
 			"value": ""
