@@ -1,5 +1,5 @@
 {
-	"name": "onperm_to_cloud_incremental_1",
+	"name": "onperm_to_cloud_incremental",
 	"properties": {
 		"activities": [
 			{
@@ -292,8 +292,101 @@
 								],
 								"scriptBlockExecutionTimeout": "02:00:00"
 							}
+						},
+						{
+							"name": "latest_log_entry",
+							"type": "SetVariable",
+							"dependsOn": [
+								{
+									"activity": "Script1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "latest_log_entry",
+								"value": "@concat(\n   '\\nTable: ', item().name,\n   '\\nType: ', activity('lkp_audit').output.firstRow.load_type,\n   '\\nRows: ',\n     if(equals(activity('lkp_audit').output.firstRow.load_type, 'incremental'),\n        string(activity('copy_incremental_load').output.rowsCopied),\n        string(activity('copy_full_data').output.rowsCopied)\n     ),\n   '\\n----------'\n)"
+							}
+						},
+						{
+							"name": "Append variable1",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "latest_log_entry",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "log_text",
+								"value": {
+									"value": "variables('latest_log_entry')",
+									"type": "Expression"
+								}
+							}
 						}
 					]
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "log_text_string",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-06.eastus.logic.azure.com:443/workflows/04b525d85aef4d7eb6d37e42ea7968b0/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=GlSGcgxaenyKqxoj36UJxw35PHKY_S7-7RW1eez861M",
+					"body": {
+						"value": "@concat('{',\n  '\"pipelineName\":\"', pipeline().Pipeline, '\",',\n  '\"runId\":\"', pipeline().RunId, '\",',\n  '\"log_text\":\"', variables('log_text_string'), '\"',\n'}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "log_text_string",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "log_text_string",
+					"value": {
+						"value": "@join(variables('log_text'), '\\n')",
+						"type": "Expression"
+					}
 				}
 			}
 		],
@@ -317,6 +410,20 @@
 						"name": "products"
 					}
 				]
+			}
+		},
+		"variables": {
+			"latest_log_entry": {
+				"type": "String",
+				"defaultValue": "''"
+			},
+			"log_text": {
+				"type": "Array",
+				"defaultValue": []
+			},
+			"log_text_string": {
+				"type": "String",
+				"defaultValue": "''"
 			}
 		},
 		"annotations": []
