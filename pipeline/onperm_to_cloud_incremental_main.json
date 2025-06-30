@@ -1,0 +1,408 @@
+{
+	"name": "onperm_to_cloud_incremental_main",
+	"properties": {
+		"activities": [
+			{
+				"name": "ForEach1",
+				"type": "ForEach",
+				"dependsOn": [],
+				"userProperties": [],
+				"typeProperties": {
+					"items": {
+						"value": "@pipeline().parameters.table_list",
+						"type": "Expression"
+					},
+					"isSequential": true,
+					"activities": [
+						{
+							"name": "lkp_audit",
+							"type": "Lookup",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat(\n  'SELECT TOP 1 * FROM dbo.etl_audit ',\n  'WHERE table_name = ''', item().name, ''' ',\n  'ORDER BY last_run_timestamp DESC'\n)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "AzureSqlDS",
+									"type": "DatasetReference",
+									"parameters": {
+										"p_table_name": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							}
+						},
+						{
+							"name": "If Condition1",
+							"type": "IfCondition",
+							"dependsOn": [
+								{
+									"activity": "lkp_audit",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"expression": {
+									"value": "@equals(activity('lkp_audit').output.firstRow.load_type, 'full')",
+									"type": "Expression"
+								},
+								"ifFalseActivities": [
+									{
+										"name": "copy_incremental_load",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "MySqlSource",
+												"query": {
+													"value": "@concat(\n  'SELECT * FROM ', item().name, \n  ' WHERE ', activity('lkp_audit').output.firstRow.date_column,\n  ' > ''', activity('lkp_audit').output.firstRow.last_loaded_at, ''''\n)",
+													"type": "Expression"
+												}
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false,
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"logSettings": {
+												"enableCopyActivityLog": true,
+												"copyActivityLogSettings": {
+													"logLevel": "Warning",
+													"enableReliableLogging": false
+												},
+												"logLocationSettings": {
+													"linkedServiceName": {
+														"referenceName": "Blue_Ls",
+														"type": "LinkedServiceReference"
+													},
+													"path": "source"
+												}
+											},
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "MySqlDS",
+												"type": "DatasetReference",
+												"parameters": {
+													"p_table_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "AzureSqlDS",
+												"type": "DatasetReference",
+												"parameters": {
+													"p_table_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								],
+								"ifTrueActivities": [
+									{
+										"name": "copy_full_data",
+										"type": "Copy",
+										"dependsOn": [],
+										"policy": {
+											"timeout": "0.12:00:00",
+											"retry": 0,
+											"retryIntervalInSeconds": 30,
+											"secureOutput": false,
+											"secureInput": false
+										},
+										"userProperties": [],
+										"typeProperties": {
+											"source": {
+												"type": "MySqlSource"
+											},
+											"sink": {
+												"type": "AzureSqlSink",
+												"writeBehavior": "insert",
+												"sqlWriterUseTableLock": false,
+												"tableOption": "autoCreate",
+												"disableMetricsCollection": false
+											},
+											"enableStaging": false,
+											"logSettings": {
+												"enableCopyActivityLog": true,
+												"copyActivityLogSettings": {
+													"logLevel": "Warning",
+													"enableReliableLogging": false
+												},
+												"logLocationSettings": {
+													"linkedServiceName": {
+														"referenceName": "Blue_Ls",
+														"type": "LinkedServiceReference"
+													},
+													"path": "source"
+												}
+											},
+											"translator": {
+												"type": "TabularTranslator",
+												"typeConversion": true,
+												"typeConversionSettings": {
+													"allowDataTruncation": true,
+													"treatBooleanAsNumber": false
+												}
+											}
+										},
+										"inputs": [
+											{
+												"referenceName": "MySqlDS",
+												"type": "DatasetReference",
+												"parameters": {
+													"p_table_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										],
+										"outputs": [
+											{
+												"referenceName": "AzureSqlDS",
+												"type": "DatasetReference",
+												"parameters": {
+													"p_table_name": {
+														"value": "@item().name",
+														"type": "Expression"
+													}
+												}
+											}
+										]
+									}
+								]
+							}
+						},
+						{
+							"name": "get_max_date",
+							"type": "Lookup",
+							"dependsOn": [
+								{
+									"activity": "If Condition1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"source": {
+									"type": "AzureSqlSource",
+									"sqlReaderQuery": {
+										"value": "@concat(\n  'SELECT ',\n    if(\n      equals(activity('lkp_audit').output.firstRow.load_type, 'incremental'),\n      concat('MAX(', activity('lkp_audit').output.firstRow.date_column, ') AS max_date '),\n      'CAST(NULL AS DATETIME) AS max_date '\n    ),\n  'FROM [dbo.', item().name, ']'\n)",
+										"type": "Expression"
+									},
+									"queryTimeout": "02:00:00",
+									"partitionOption": "None"
+								},
+								"dataset": {
+									"referenceName": "AzureSqlDS",
+									"type": "DatasetReference",
+									"parameters": {
+										"p_table_name": {
+											"value": "@item().name",
+											"type": "Expression"
+										}
+									}
+								}
+							}
+						},
+						{
+							"name": "Script1",
+							"description": "",
+							"type": "Script",
+							"dependsOn": [
+								{
+									"activity": "get_max_date",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"linkedServiceName": {
+								"referenceName": "AzureSqlLS",
+								"type": "LinkedServiceReference"
+							},
+							"typeProperties": {
+								"scripts": [
+									{
+										"type": "Query",
+										"text": {
+											"value": "@concat(\n  'INSERT INTO dbo.etl_audit (table_name, date_column, load_type, last_loaded_at, last_run_status, last_run_row_count, last_run_timestamp) VALUES (''',\n  item().name, ''', ''',\n  activity('lkp_audit').output.firstRow.date_column, ''', ''',\n  activity('lkp_audit').output.firstRow.load_type, ''', ',\n  \n  \n  if(\n    equals(activity('lkp_audit').output.firstRow.load_type, 'full'),\n    'null',\n    concat('''', activity('get_max_date').output.firstRow.max_date, '''')\n  ), ', ''Success'', ',\n  \n  \n  if(\n    equals(activity('lkp_audit').output.firstRow.load_type, 'full'),\n    activity('copy_full_data').output.rowsCopied,\n    activity('copy_incremental_load').output.rowsCopied\n  ), ', GETDATE());'\n)",
+											"type": "Expression"
+										}
+									}
+								],
+								"scriptBlockExecutionTimeout": "02:00:00"
+							}
+						},
+						{
+							"name": "Append_Table_Log",
+							"type": "AppendVariable",
+							"dependsOn": [
+								{
+									"activity": "Script1",
+									"dependencyConditions": [
+										"Succeeded"
+									]
+								}
+							],
+							"userProperties": [],
+							"typeProperties": {
+								"variableName": "log_text",
+								"value": {
+									"value": "@concat(\n   'Table: ', item().name,\n   '\\nType: ', activity('lkp_audit').output.firstRow.load_type,\n   '\\nRows: ',\n     if(equals(activity('lkp_audit').output.firstRow.load_type, 'incremental'),\n        string(activity('copy_incremental_load').output.rowsCopied),\n        string(activity('copy_full_data').output.rowsCopied)\n     ),\n   '\\n----------'\n)",
+									"type": "Expression"
+								}
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [
+					{
+						"activity": "log_text_string",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"method": "POST",
+					"url": "https://prod-06.eastus.logic.azure.com:443/workflows/04b525d85aef4d7eb6d37e42ea7968b0/triggers/When_a_HTTP_request_is_received/paths/invoke?api-version=2016-10-01&sp=%2Ftriggers%2FWhen_a_HTTP_request_is_received%2Frun&sv=1.0&sig=GlSGcgxaenyKqxoj36UJxw35PHKY_S7-7RW1eez861M",
+					"body": {
+						"value": "@concat('{',\n  '\"pipelineName\":\"', pipeline().Pipeline, '\",',\n  '\"runId\":\"', pipeline().RunId, '\",',\n  '\"log_text\":\"', variables('log_text_string'), '\"',\n'}')",
+						"type": "Expression"
+					}
+				}
+			},
+			{
+				"name": "log_text_string",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "ForEach1",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "log_text_string",
+					"value": {
+						"value": "@join(variables('log_text'), '\\n')",
+						"type": "Expression"
+					}
+				}
+			}
+		],
+		"parameters": {
+			"table_list": {
+				"type": "array",
+				"defaultValue": [
+					{
+						"name": "customers"
+					},
+					{
+						"name": "orders"
+					},
+					{
+						"name": "order_items"
+					},
+					{
+						"name": "payments"
+					},
+					{
+						"name": "products"
+					}
+				]
+			}
+		},
+		"variables": {
+			"log_text": {
+				"type": "Array",
+				"defaultValue": []
+			},
+			"log_text_string": {
+				"type": "String"
+			}
+		},
+		"annotations": []
+	}
+}
